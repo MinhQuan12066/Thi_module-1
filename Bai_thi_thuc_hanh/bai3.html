@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        input {
+            padding: 5px 10px;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 5px 20px;
+            cursor: pointer;
+        }
+
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<input type="text" id="monthYearInput" placeholder="Nhập tháng năm (MM/yyyy)" />
+<button onclick="calculateDays()">Tính số ngày</button>
+<div id="result"></div>
+<div id="error" class="error"></div>
+
+<script>
+    const isLeapYear = (year) => {
+        return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+    };
+    const isValidMonthYearFormat = (input) => {
+        if (input.length !== 7 || input.charAt(2) !== '/') {
+            return false;
+        }
+
+        const month = input.slice(0, 2);
+        const year = input.slice(3, 7);
+
+        return !isNaN(month) && !isNaN(year) && parseInt(month) >= 1 && parseInt(month) <= 12;
+    };
+
+    const calculateDays = () => {
+        const inputValue = document.getElementById("monthYearInput").value;
+        const errorElement = document.getElementById("error");
+        errorElement.innerHTML = '';
+
+        if (!isValidMonthYearFormat(inputValue)) {
+            errorElement.innerHTML ="Lỗi định dạng";
+            return;
+        }
+
+        const month = parseInt(inputValue.slice(0, 2), 10);
+        const year = parseInt(inputValue.slice(3, 7), 10);
+        let daysInMonth;
+
+        switch (month) {
+            case 1:
+            case 3:
+            case 5:
+            case 7:
+            case 8:
+            case 10:
+            case 12:
+                daysInMonth = 31;
+                break;
+            case 4:
+            case 6:
+            case 9:
+            case 11:
+                daysInMonth = 30;
+                break;
+            case 2:
+                daysInMonth = isLeapYear(year) ? 29 : 28;
+                break;
+            default:
+                daysInMonth = 0;
+        }
+
+        document.getElementById("result").innerHTML = `Số ngày trong tháng ${month}/${year} là: ${daysInMonth} ngày.`;
+    };
+</script>
+</body>
+</html>

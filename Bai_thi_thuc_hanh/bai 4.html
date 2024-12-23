@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bài 4: Quản lý công nhân</title>
+    <style>
+        h2 {
+            text-align: center;
+        }
+
+        body {
+            font-size: 20px;
+            font-family: "Times New Roman";
+        }
+
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border: 3px solid black;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px 15px;
+            border: 1px solid black;
+        }
+
+        th {
+            background-color: gray;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+
+        .sort-buttons {
+            text-align: center;
+            margin: 20px;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<h2>Quản lý công nhân</h2>
+<div class="sort-buttons">
+    <button onclick="sortByHoten()">Sắp xếp theo Họ và Tên</button>
+</div>
+<div id="result"></div>
+<script>
+    class Congnhan {
+        constructor(stt, hoten, ngaysinh, diachi, luong, chucvu) {
+            this.stt = stt;
+            this.hoten = hoten;
+            this.ngaysinh = ngaysinh;
+            this.diachi = diachi;
+            this.luong = luong;
+            this.chucvu = chucvu;
+        }
+
+        renderRow() {
+            return `
+                <tr>
+                    <td>${this.stt}</td>
+                    <td>${this.hoten}</td>
+                    <td>${this.ngaysinh}</td>
+                    <td>${this.diachi}</td>
+                    <td>${this.luong}</td>
+                    <td>${this.chucvu}</td>
+                </tr>
+            `;
+        }
+    }
+
+    class QuanLyCongNhan {
+        constructor() {
+            this.danhSachCongNhan = [];
+        }
+
+        themCongNhan(congnhan) {
+            this.danhSachCongNhan.push(congnhan);
+        }
+
+        sapXepTheoHoten() {
+            this.danhSachCongNhan.sort((a, b) => a.hoten.localeCompare(b.hoten));
+        }
+
+        renderTable() {
+            const headers = ['STT', 'Họ và tên', 'Ngày sinh', 'Địa chỉ', 'Lương', 'Chức vụ'];
+            let tableHTML = '<table><thead><tr>' +
+                headers.map(header => `<th>${header}</th>`).join('') +
+                '</tr></thead><tbody>' +
+                this.danhSachCongNhan.map(cn => cn.renderRow()).join('') +
+                '</tbody></table>';
+            return tableHTML;
+        }
+    }
+
+    const quanLy = new QuanLyCongNhan();
+    quanLy.themCongNhan(new Congnhan(1, "Trương Tấn C", "11-11-1999", "Huế", 2000, "Abc"));
+    quanLy.themCongNhan(new Congnhan(2, "Trương Tấn A", "11-11-1997", "Quảng Nam", 2000, "Abc"));
+    quanLy.themCongNhan(new Congnhan(3, "Trương Tấn B", "11-11-1998", "Đà Nẵng", 2000, "Abc"));
+
+    function render() {
+        document.getElementById("result").innerHTML = quanLy.renderTable();
+    }
+
+    function sortByHoten() {
+        quanLy.sapXepTheoHoten();
+        render();
+    }
+
+    // Hiển thị bảng ban đầu
+    render();
+</script>
+</body>
+</html>
